@@ -122,7 +122,8 @@ TechnicalTestBankingJava/
 │   └── src/...
 ├── ia/
 │   ├── prompts.md
-│   └── decisions.md
+│   ├── decisions.md
+│   └── generations/
 ├── docker-compose.yml
 ├── .env
 └── README.md
