@@ -1,0 +1,9 @@
+<!-- Minimal DTD because Checkstyle only checks structure -->
+<!ELEMENT suppressions (suppress-xpath*)>
+
+<!ELEMENT suppress-xpath EMPTY>
+<!ATTLIST suppress-xpath
+    files CDATA #IMPLIED
+    checks CDATA #IMPLIED
+    xpath CDATA #REQUIRED
+>

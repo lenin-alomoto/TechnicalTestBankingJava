@@ -1,0 +1,225 @@
+openapi: 3.0.3
+info:
+  title: Payment Initiation - Payment Order API (BIAN aligned)
+  version: 1.0.0
+  description: >
+    API REST alineada al Service Domain "Payment Initiation" de BIAN, BQ "PaymentOrder".
+    Basada en el análisis del servicio SOAP legado de órdenes de pago y los ejemplos proporcionados.
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /payment-initiation/payment-orders:
+    post:
+      summary: Initiate a Payment Order
+      operationId: initiatePaymentOrder
+      tags:
+        - Payment Initiation - PaymentOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentOrderInitiateRequest'
+            examples:
+              sample:
+                value:
+                  externalReference: "EXT-1"
+                  debtorAccount: { iban: "EC12DEBTOR" }
+                  creditorAccount: { iban: "EC98CREDITOR" }
+                  instructedAmount: { amount: 150.75, currency: "USD" }
+                  remittanceInformation: "Factura 001-123"
+                  requestedExecutionDate: "2025-10-31"
+      responses:
+        "201":
+          description: Payment Order initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentOrderInitiateResponse'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+  /payment-initiation/payment-orders/{paymentOrderId}:
+    get:
+      summary: Retrieve a Payment Order
+      operationId: retrievePaymentOrder
+      tags:
+        - Payment Initiation - PaymentOrder
+      parameters:
+        - name: paymentOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment Order retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentOrderRetrieveResponse'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+  /payment-initiation/payment-orders/{paymentOrderId}/status:
+    get:
+      summary: Retrieve Payment Order status
+      operationId: retrievePaymentOrderStatus
+      tags:
+        - Payment Initiation - PaymentOrder
+      parameters:
+        - name: paymentOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment Order status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentOrderStatusResponse'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    AccountReference:
+      type: object
+      required: [ iban ]
+      properties:
+        iban:
+          type: string
+
+    Amount:
+      type: object
+      required: [ amount, currency ]
+      properties:
+        amount:
+          type: number
+          format: decimal
+        currency:
+          type: string
+
+    PaymentOrderInitiateRequest:
+      type: object
+      required:
+        - externalReference
+        - debtorAccount
+        - creditorAccount
+        - instructedAmount
+        - requestedExecutionDate
+      properties:
+        externalReference:
+          type: string
+        debtorAccount:
+          $ref: '#/components/schemas/AccountReference'
+        creditorAccount:
+          $ref: '#/components/schemas/AccountReference'
+        instructedAmount:
+          $ref: '#/components/schemas/Amount'
+        remittanceInformation:
+          type: string
+          nullable: true
+        requestedExecutionDate:
+          type: string
+          format: date
+
+    PaymentOrderInitiateResponse:
+      type: object
+      required:
+        - paymentOrderId
+        - status
+      properties:
+        paymentOrderId:
+          type: string
+        status:
+          type: string
+
+    PaymentOrderRetrieveResponse:
+      type: object
+      required:
+        - paymentOrderId
+        - externalReference
+        - status
+      properties:
+        paymentOrderId:
+          type: string
+        externalReference:
+          type: string
+        debtorAccount:
+          $ref: '#/components/schemas/AccountReference'
+        creditorAccount:
+          $ref: '#/components/schemas/AccountReference'
+        instructedAmount:
+          $ref: '#/components/schemas/Amount'
+        remittanceInformation:
+          type: string
+          nullable: true
+        requestedExecutionDate:
+          type: string
+          format: date
+        status:
+          type: string
+        lastUpdate:
+          type: string
+          format: date-time
+          nullable: true
+
+    PaymentOrderStatusResponse:
+      type: object
+      required:
+        - paymentOrderId
+        - status
+      properties:
+        paymentOrderId:
+          type: string
+        status:
+          type: string
+        lastUpdate:
+          type: string
+          format: date-time
+          nullable: true
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: string
+          nullable: true
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

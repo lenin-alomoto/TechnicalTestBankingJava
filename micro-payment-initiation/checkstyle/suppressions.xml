@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+
+    <!-- Excluir TODA la carpeta de código generado OpenAPI -->
+    <suppress files=".*[\\/]generated-sources[\\/]openapi[\\/].*" checks=".*"/>
+
+    <!-- Excluir cualquier referencia directa a los paquetes api/ -->
+    <suppress files=".*com/bank/micro_payment_initiation/payment/api/.*" checks=".*"/>
+    <suppress files=".*com/bank/micro_payment_initiation/payment/api/model/.*" checks=".*"/>
+
+</suppressions>

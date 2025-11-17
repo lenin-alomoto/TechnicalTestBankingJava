@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionXpathFilter Configuration 1.3//EN"
+    "dtd/suppressions_xpath_1_3.dtd">
+
+<suppressions>
+
+    <suppress-xpath
+        files=".*Mapper\.java"
+        checks="Indentation|LineLength"
+        xpath="//annotation/elementValuePair"
+    />
+
+</suppressions>

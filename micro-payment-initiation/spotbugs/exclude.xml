@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+
+    <!-- Excluir código generado por OpenAPI -->
+    <Match>
+        <Package name="com.bank.micro_payment_initiation.payment.api"/>
+    </Match>
+    <Match>
+        <Package name="com.bank.micro_payment_initiation.payment.api.model"/>
+    </Match>
+
+    <!-- Excluir todo lo generado en target/generated-sources -->
+    <Match>
+        <Source name="~.*/generated-sources/.*"/>
+    </Match>
+
+    <!-- Excluir falsos positivos típicos de modelos DDD -->
+    <Match>
+        <Package name="com.bank.micro_payment_initiation.payment.domain.models"/>
+        <Bug code="EI,EI2"/>
+    </Match>
+
+</FindBugsFilter>
