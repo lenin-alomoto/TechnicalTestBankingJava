@@ -263,7 +263,7 @@ Incluyendo:
 Actuator UI disponible en:
 
 ```
-http://localhost:8088/actuator/
+http://localhost:8080/actuator/
 ```
 
 ---
