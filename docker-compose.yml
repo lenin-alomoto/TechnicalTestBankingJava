@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:17.6-alpine
+    container_name: payment-postgres
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - payment_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  payment-initiation:
+    build:
+      context: ./micro-payment-initiation
+    container_name: payment-initiation
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${SERVER_PORT}:8080"
+
+volumes:
+  payment_data:
